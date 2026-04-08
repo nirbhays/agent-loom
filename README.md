@@ -174,6 +174,66 @@ ruff check src/ tests/
 mypy src/
 ```
 
+
+## Why AgentLoom?
+
+Building agent workflows with LangGraph or CrewAI means steep learning curves and heavy dependencies. AgentLoom takes a different approach: your existing Python functions become workflow steps with a single decorator.
+
+No new concepts. No framework lock-in. No LLM API keys needed to test.
+
+## Installation
+
+```bash
+pip install agentloom
+```
+
+## Quick Example
+
+```python
+from agentloom import workflow, step
+
+@step
+def fetch_data(query: str) -> dict:
+    return {"data": f"results for {query}"}
+
+@step
+def summarise(data: dict) -> str:
+    return f"Summary: {data['data']}"
+
+@workflow
+def research_pipeline(query: str) -> str:
+    raw = fetch_data(query)
+    return summarise(raw)
+
+# Run with full tracing
+result = research_pipeline("climate change")
+```
+
+Every step automatically captures: execution time, inputs, outputs, errors, and retry attempts.
+
+## Compared to Alternatives
+
+| | AgentLoom | LangGraph | CrewAI |
+|---|---|---|---|
+| Setup | Decorator only | Graph DSL | Agent classes |
+| LLM required to test | No | No | Yes |
+| Tracing built-in | Yes | Partial | No |
+| Async support | Yes | Yes | Partial |
+| Learning curve | Low | Medium | Medium |
+
+## Use Cases
+
+- **Rapid prototyping** — sketch pipelines without API keys
+- **Production observability** — trace every step in real workflows  
+- **CI/CD validation** — test workflow logic deterministically
+- **Agent debugging** — understand exactly where failures occur
+
+## Project Links
+
+- 📋 [Roadmap](ROADMAP.md)
+- 🤝 [Contributing](CONTRIBUTING.md)
+- 🐛 [Issues](https://github.com/nirbhays/agent-loom/issues)
+
 ## License
 
 MIT. See [LICENSE](LICENSE).
